@@ -13,7 +13,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`bg-dark-1 ${inter.className}`}>{children}</body>
+        <body className={`bg-dark-1 ${inter.className}`}>
+          <div className="w-full flex items-center justify-center min-h-screen">
+            {children}
+          </div>
+        </body>
       </html>
     </ClerkProvider>
   );

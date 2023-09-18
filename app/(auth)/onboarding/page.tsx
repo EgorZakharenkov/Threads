@@ -1,10 +1,22 @@
 import AccountProfile from "@/components/forms/AccountProfile";
 import { currentUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { fetchUser } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
 
+interface UserData {
+  id: string | undefined;
+  objectId: string;
+  username: string;
+  name: string;
+  bio: string;
+  image: string;
+}
 async function Page() {
   const user = await currentUser();
-  const userInfo = {};
-  const userData = {
+  const userId = user?.id;
+  const userInfo = await fetchUser(userId ? userId : "");
+  const userData: UserData = {
     id: user?.id,
     objectId: userInfo?._id || "",
     username: userInfo?.username || user?.username,
@@ -21,6 +33,7 @@ async function Page() {
       </p>
       <section className="mt-9 bg-dark-2 p-10">
         <AccountProfile user={userData} btnTitle="Continue" />
+        <Link href="/">No thanks</Link>
       </section>
     </main>
   );
