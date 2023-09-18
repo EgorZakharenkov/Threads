@@ -16,10 +16,9 @@ import { ThreadValidation } from "@/lib/validations/thred";
 import { Button } from "@/components/ui/button";
 import * as z from "zod";
 import { Textarea } from "@/components/ui/textarea";
-import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
 import { createThread } from "@/lib/actions/thread.actions";
+import { useOrganization } from "@clerk/nextjs";
 
 interface Props {
   user: {
@@ -36,6 +35,7 @@ interface Props {
 function PostThread({ userId }: { userId: string }) {
   const [files, setFiles] = useState<File[]>([]);
   const router = useRouter();
+  const { organization } = useOrganization();
   const pathname = usePathname();
   const form = useForm({
     resolver: zodResolver(ThreadValidation),
@@ -48,10 +48,11 @@ function PostThread({ userId }: { userId: string }) {
     await createThread({
       text: values.thread,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
     router.push("/");
+    console.log(organization);
   };
   return (
     <Form {...form}>
